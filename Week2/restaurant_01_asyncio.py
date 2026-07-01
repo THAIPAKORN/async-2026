@@ -1,60 +1,44 @@
 import asyncio
-from time import ctime, time
+import multiprocessing
+from time import ctime, sleep, time
 
-# Greeting Async
-async def greet_diners(customer):
+def greet_dinner(customer):
     print(f"{ctime()} Greeting for Customer-{customer} ...")
-    await asyncio.sleep(1)
+    sleep(1)  # Simulate a delay in greeting
     print(f"{ctime()} Greeting for Customer-{customer} ...Done!")
 
-# Take Order
-async def take_orders(customer):
+def customer_private_workflow(customer):
     print(f"{ctime()} Taking Order for Customer-{customer} ...")
-    await asyncio.sleep(1)
+    sleep(1)  # Simulate a delay in taking order
     print(f"{ctime()} Taking Order for Customer-{customer} ...Done!")
 
-# Do Cooking
-async def do_cooking(customer):
+
     print(f"{ctime()} Cooking for Customer-{customer} ...")
-    await asyncio.sleep(1)
+    sleep(1)  # Simulate a delay in cooking
     print(f"{ctime()} Cooking for Customer-{customer} ...Done!")
 
-# Mini Bar
-async def mini_bar(customer):
-    print(f"{ctime()} Mini Bar for Customer-{customer} ...")
-    await asyncio.sleep(1)
-    print(f"{ctime()} Mini Bar for Customer-{customer} ...Done!")
 
-async def serve_customer(customer):
-    await take_orders(customer)
-    await do_cooking(customer)
-    await mini_bar(customer)
-    print(f"{ctime()} Customer-{customer} All served!")
-
-async def main():
-    customers = ['A', 'B', 'C']
-
-    start_time = time()
-
-    # Greeting ทีละคนก่อน
-    for customer in customers:
-        await greet_diners(customer)
-
-    print(f"{ctime()} --- All customers greeted. Scheduling Async Tasks! ---")
-
-    # ให้ A, B, C ทำงานพร้อมกัน
-    tasks = []
-
-    for customer in customers:
-        task = asyncio.create_task(serve_customer(customer))
-        tasks.append(task)
-
-    await asyncio.gather(*tasks)
-
-    duration = time() - start_time
-    print(f"{ctime()} Finished Restaurant Operation in {duration:.2f} seconds")
+    print(f"{ctime()} Mini bar for Customer-{customer} ...")
+    sleep(1)  # Simulate a delay in preparing mini bar
+    print(f"{ctime()} Mini bar for Customer-{customer} ...Done!")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    customers = ["A", "B", "C"]
+    start_time = time()
 
+    for customer in customers:
+        greet_dinner(customer)
 
+    print(f"\n{ctime()} --- All customer greeted. Splitting into individual threads1 ---")
+
+    processes = []
+    for customer in customers:
+        p = multiprocessing.Process(target=customer_private_workflow, args=(customer,))
+        processes.append(p)
+        p.start()
+    
+    for p in processes:
+        p.join()
+
+    duration = time() - start_time
+    print(f"{ctime()} finished cooking in {duration:.2f} seconds")
