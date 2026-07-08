@@ -9,7 +9,7 @@ async def background_loop():
             await asyncio.sleep(1)
             print(f"{ctime()} Worker: Still ticking...")
     except asyncio.CancelledError:
-        # 
+        # เมื่อมีคนมาบอกว่ายกเลิก task นี้ เราจะทำงาน clean-up ก่อนที่จะออกจาก loop
         print(f"{ctime()} Worker: Interrupted! Executing clean-up logic before exit...")
 
 async def main():
@@ -17,7 +17,7 @@ async def main():
     await asyncio.sleep(2.5) # 
     
     print(f"{ctime()} Main: Changing plans, canceling the worker task now!")
-    task.cancel() # 
+    task.cancel() # สั่งให้หยุด
     await asyncio.sleep(0.1) # 
 
 asyncio.run(main())

@@ -1,4 +1,5 @@
 # Objective: Label task objects explicitly to simplify logging and production tracking.
+#การตั้งชื่อ task
 import asyncio
 from time import ctime
 
@@ -8,11 +9,11 @@ async def background_worker():
 async def main():
     task = asyncio.create_task(background_worker())
     
-    # 
-    print(f"{ctime()} Initial Name: {task.get_name()}") # 
+    # แสดงชื่อเริ่มต้นของ task
+    print(f"{ctime()} Initial Name: {task.get_name()}") # task-2
     
-    # 
+    # ตั้งชื่อใหม่ให้ task
     task.set_name("Payment-Gateway-Validator")
-    print(f"{ctime()} Updated Name: {task.get_name()}") # 
+    print(f"{ctime()} Updated Name: {task.get_name()}") # Payment-Gateway-Validator
 
 asyncio.run(main())

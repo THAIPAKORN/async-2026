@@ -1,4 +1,5 @@
 # Objective: Compare the structural and mechanical differences of both strategies in a racing scenario.
+#เอา 2 อันมาต่อกัน
 import asyncio
 from time import ctime
 
@@ -7,12 +8,12 @@ async def runner(name, speed):
     return f"{name} crossed line!"
 
 async def main():
-    # 
+    # เคส A :จะรันด้วย gather() 
     print(f"{ctime()} --- Starting gather() approach (Unified Aggregation) ---")
     all_finishes = await asyncio.gather(runner("A", 0.5), runner("B", 2.0))
     print(f"{ctime()} Gather output: {all_finishes}\n")
     
-    # 
+    # เคส B :จะรันด้วย wait() 
     print(f"{ctime()} --- Starting wait() approach (State control / Racing) ---")
     active_tasks = {asyncio.create_task(runner("A", 0.5)), asyncio.create_task(runner("B", 2.0))}
     
